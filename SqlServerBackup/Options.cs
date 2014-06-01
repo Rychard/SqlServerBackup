@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CommandLine;
 using CommandLine.Text;
 
@@ -10,6 +7,8 @@ namespace SqlServerBackup
 {
     public class Options
     {
+        // TODO: Add option to specify path to configuration file.  Any settings defined within that file should override the command line arguments.
+
         [Option('s', "server", Required = true, HelpText = "Host, IP address, or instance to connect to")]
         public String Server { get; set; }
 

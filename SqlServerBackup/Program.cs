@@ -16,13 +16,29 @@ namespace SqlServerBackup
 
             Console.WriteLine("Arguments Parsed!");
 
-            //Connect to the local, default instance of SQL Server. 
-            var _server = new Server(@".\SQLExpress");
+            // TODO: Pull from configuration file OR command-line arguments.
+            var server = new Server(@".\SQLExpress");
 
-            foreach (Database database in _server.Databases)
+            // TODO: Pull from configuration file OR command-line arguments.
+            foreach (Database database in server.Databases)
             {
-                if (database.Name == "tempdb") { continue; } // Backup and Restore operations are not permitted on tempdb
-                BackupHelper.BackupDatabase(_server, database.Name, String.Format("D:\\{0}.bak", database.Name), 1, CompletionCallback, ErrorCallback);
+                // Backup operations are not permitted on the "tempdb" database.
+                if (database.Name == "tempdb") { continue; }
+
+                // TODO: Check the size of the database.  Ensure that there is enough free space to store the backup.
+
+                // TODO: Pull from configuration file OR command-line arguments.
+                String outputFilepath = String.Format("D:\\{0}.bak", database.Name);
+
+                // TODO: Pull from configuration file OR command-line arguments.
+                // Notifications will be raised every _x_ percent.  A value of 1 raises notifications at every percentage.
+                int completionNotificationInterval = 1;
+
+                // TODO: Raise event prior to database backup.
+                
+                BackupHelper.BackupDatabase(server, database.Name, outputFilepath, completionNotificationInterval, CompletionCallback, ErrorCallback);
+
+                // TODO: Raise event after database has been backed up.
             }
         }
 
