@@ -169,7 +169,6 @@ namespace SqlServerBackup
 
             Console.WriteLine("Uploaded Backups to Amazon S3.");
             Console.WriteLine("All tasks have completed successfully.");
-            Console.ReadKey();
         }
 
 
@@ -182,15 +181,20 @@ namespace SqlServerBackup
 
             foreach (var fileToUpload in _filesToUpload)
             {
-                while (_uploadInProgress)
-                {
-                    System.Threading.Thread.Sleep(1000);
-                }
                 String filename = Path.GetFileName(fileToUpload);
                 Console.WriteLine("Uploading: {0}", fileToUpload);
                 amazonClient.UploadComplete += AmazonClientOnUploadComplete;
                 _uploadInProgress = true;
                 amazonClient.UploadFile(filename, fileToUpload);
+                while (_uploadInProgress)
+                {
+                    System.Threading.Thread.Sleep(1000);
+                }
+                Console.WriteLine("Upload Complete!");
+
+                // Delete file after it has been uploaded.
+                File.Delete(fileToUpload);
+                Console.WriteLine("Deleted local backup.");
             }
         }
 
